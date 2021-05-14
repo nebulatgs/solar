@@ -106,28 +106,35 @@ build cmake_object_order_depends_target_solar: phony || CMakeFiles/solar.dir
 build CMakeFiles/solar.dir/src/solar.cpp.o: CXX_COMPILER__solar ../src/solar.cpp || cmake_object_order_depends_target_solar
   DEP_FILE = CMakeFiles/solar.dir/src/solar.cpp.o.d
   FLAGS = -g   -std=c++17 -O3 -fexceptions -std=gnu++17
-  INCLUDES = -I../lib/include -I../lib/glm
+  INCLUDES = -I../lib/glm
   OBJECT_DIR = CMakeFiles/solar.dir
   OBJECT_FILE_DIR = CMakeFiles/solar.dir/src
 
 build CMakeFiles/solar.dir/src/game.cpp.o: CXX_COMPILER__solar ../src/game.cpp || cmake_object_order_depends_target_solar
   DEP_FILE = CMakeFiles/solar.dir/src/game.cpp.o.d
   FLAGS = -g   -std=c++17 -O3 -fexceptions -std=gnu++17
-  INCLUDES = -I../lib/include -I../lib/glm
+  INCLUDES = -I../lib/glm
   OBJECT_DIR = CMakeFiles/solar.dir
   OBJECT_FILE_DIR = CMakeFiles/solar.dir/src
 
 build CMakeFiles/solar.dir/src/partsys.cpp.o: CXX_COMPILER__solar ../src/partsys.cpp || cmake_object_order_depends_target_solar
   DEP_FILE = CMakeFiles/solar.dir/src/partsys.cpp.o.d
   FLAGS = -g   -std=c++17 -O3 -fexceptions -std=gnu++17
-  INCLUDES = -I../lib/include -I../lib/glm
+  INCLUDES = -I../lib/glm
   OBJECT_DIR = CMakeFiles/solar.dir
   OBJECT_FILE_DIR = CMakeFiles/solar.dir/src
 
 build CMakeFiles/solar.dir/src/shader.cpp.o: CXX_COMPILER__solar ../src/shader.cpp || cmake_object_order_depends_target_solar
   DEP_FILE = CMakeFiles/solar.dir/src/shader.cpp.o.d
   FLAGS = -g   -std=c++17 -O3 -fexceptions -std=gnu++17
-  INCLUDES = -I../lib/include -I../lib/glm
+  INCLUDES = -I../lib/glm
+  OBJECT_DIR = CMakeFiles/solar.dir
+  OBJECT_FILE_DIR = CMakeFiles/solar.dir/src
+
+build CMakeFiles/solar.dir/src/bcontroller.cpp.o: CXX_COMPILER__solar ../src/bcontroller.cpp || cmake_object_order_depends_target_solar
+  DEP_FILE = CMakeFiles/solar.dir/src/bcontroller.cpp.o.d
+  FLAGS = -g   -std=c++17 -O3 -fexceptions -std=gnu++17
+  INCLUDES = -I../lib/glm
   OBJECT_DIR = CMakeFiles/solar.dir
   OBJECT_FILE_DIR = CMakeFiles/solar.dir/src
 
@@ -139,7 +146,7 @@ build CMakeFiles/solar.dir/src/shader.cpp.o: CXX_COMPILER__solar ../src/shader.c
 #############################################
 # Link the executable solar.js
 
-build solar.js: CXX_EXECUTABLE_LINKER__solar CMakeFiles/solar.dir/src/solar.cpp.o CMakeFiles/solar.dir/src/game.cpp.o CMakeFiles/solar.dir/src/partsys.cpp.o CMakeFiles/solar.dir/src/shader.cpp.o
+build solar.js: CXX_EXECUTABLE_LINKER__solar CMakeFiles/solar.dir/src/solar.cpp.o CMakeFiles/solar.dir/src/game.cpp.o CMakeFiles/solar.dir/src/partsys.cpp.o CMakeFiles/solar.dir/src/shader.cpp.o CMakeFiles/solar.dir/src/bcontroller.cpp.o
   FLAGS = -g
   LINK_FLAGS = $
 						-std=c++17 $
@@ -157,7 +164,7 @@ build solar.js: CXX_EXECUTABLE_LINKER__solar CMakeFiles/solar.dir/src/solar.cpp.
 						--bind$
 						--preload-file ../shaders
   OBJECT_DIR = CMakeFiles/solar.dir
-  POST_BUILD = :
+  POST_BUILD = cd /workspaces/solar/build && /usr/bin/cp solar.data ..
   PRE_LINK = :
   TARGET_FILE = solar.js
   TARGET_PDB = solar.js.dbg

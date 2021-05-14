@@ -16,6 +16,9 @@ public:
     void draw();
     void input();
 
+public:
+    glm::mat4 transform;
+
 private:
     void initGL();
 

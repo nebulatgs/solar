@@ -187,7 +187,7 @@ var Module = typeof Module !== 'undefined' ? Module : {};
     }
   
    }
-   loadPackage({"files": [{"filename": "/shaders/circle.frag", "start": 0, "end": 1030, "audio": 0}, {"filename": "/shaders/circle.vert", "start": 1030, "end": 1385, "audio": 0}], "remote_package_size": 1385, "package_uuid": "89d0b5cc-b160-41b0-95cc-1f06170fa5ba"});
+   loadPackage({"files": [{"filename": "/shaders/circle.frag", "start": 0, "end": 1051, "audio": 0}, {"filename": "/shaders/circle.vert", "start": 1051, "end": 1402, "audio": 0}], "remote_package_size": 1402, "package_uuid": "dbce2bee-7b75-44b5-88cc-77cf19eaf180"});
   
   })();
   
@@ -6483,6 +6483,29 @@ var ASM_CONSTS = {
       }
     }
 
+  /** @suppress {checkTypes} */
+  function jstoi_q(str) {
+      return parseInt(str);
+    }
+  function _glGetUniformLocation(program, name) {
+      name = UTF8ToString(name);
+  
+      var arrayIndex = 0;
+      // If user passed an array accessor "[index]", parse the array index off the accessor.
+      if (name[name.length - 1] == ']') {
+        var leftBrace = name.lastIndexOf('[');
+        arrayIndex = name[leftBrace+1] != ']' ? jstoi_q(name.slice(leftBrace + 1)) : 0; // "index]", parseInt will ignore the ']' at the end; but treat "foo[]" as "foo[0]"
+        name = name.slice(0, leftBrace);
+      }
+  
+      var uniformInfo = GL.programInfos[program] && GL.programInfos[program].uniforms[name]; // returns pair [ dimension_of_uniform_array, uniform_location ]
+      if (uniformInfo && arrayIndex >= 0 && arrayIndex < uniformInfo[0]) { // Check if user asked for an out-of-bounds element, i.e. for 'vec4 colors[3];' user could ask for 'colors[10]' which should return -1.
+        return uniformInfo[1] + arrayIndex;
+      } else {
+        return -1;
+      }
+    }
+
   function _glLinkProgram(program) {
       GLctx.linkProgram(GL.programs[program]);
       GL.populateUniformTable(program);
@@ -6492,6 +6515,11 @@ var ASM_CONSTS = {
       var source = GL.getSource(shader, count, string, length);
   
       GLctx.shaderSource(GL.shaders[shader], source);
+    }
+
+  function _glUniformMatrix4fv(location, count, transpose, value) {
+  
+      GLctx.uniformMatrix4fv(GL.uniforms[location], !!transpose, HEAPF32, value>>2, count*16);
     }
 
   function _glUseProgram(program) {
@@ -6505,8 +6533,6 @@ var ASM_CONSTS = {
   function _glVertexAttribPointer(index, size, type, normalized, stride, ptr) {
       GLctx.vertexAttribPointer(index, size, type, !!normalized, stride, ptr);
     }
-
-  function _glViewport(x0, x1, x2, x3) { GLctx['viewport'](x0, x1, x2, x3) }
 
   /** @constructor */
   function GLFW_Window(id, width, height, title, monitor, share) {
@@ -7876,12 +7902,13 @@ var asmLibraryArg = {
   "glGetProgramiv": _glGetProgramiv,
   "glGetShaderInfoLog": _glGetShaderInfoLog,
   "glGetShaderiv": _glGetShaderiv,
+  "glGetUniformLocation": _glGetUniformLocation,
   "glLinkProgram": _glLinkProgram,
   "glShaderSource": _glShaderSource,
+  "glUniformMatrix4fv": _glUniformMatrix4fv,
   "glUseProgram": _glUseProgram,
   "glVertexAttribDivisor": _glVertexAttribDivisor,
   "glVertexAttribPointer": _glVertexAttribPointer,
-  "glViewport": _glViewport,
   "glfwCreateWindow": _glfwCreateWindow,
   "glfwGetFramebufferSize": _glfwGetFramebufferSize,
   "glfwInit": _glfwInit,
@@ -7903,7 +7930,6 @@ var asmLibraryArg = {
   "invoke_vii": invoke_vii,
   "invoke_viii": invoke_viii,
   "invoke_viiii": invoke_viiii,
-  "invoke_viiiiii": invoke_viiiiii,
   "setTempRet0": _setTempRet0,
   "strftime_l": _strftime_l
 };
@@ -7913,6 +7939,9 @@ var ___wasm_call_ctors = Module["___wasm_call_ctors"] = createExportWrapper("__w
 
 /** @type {function(...*):?} */
 var _main = Module["_main"] = createExportWrapper("main");
+
+/** @type {function(...*):?} */
+var _strlen = Module["_strlen"] = createExportWrapper("strlen");
 
 /** @type {function(...*):?} */
 var _fflush = Module["_fflush"] = createExportWrapper("fflush");
@@ -8052,17 +8081,6 @@ function invoke_viii(index,a1,a2,a3) {
   }
 }
 
-function invoke_viiii(index,a1,a2,a3,a4) {
-  var sp = stackSave();
-  try {
-    wasmTable.get(index)(a1,a2,a3,a4);
-  } catch(e) {
-    stackRestore(sp);
-    if (e !== e+0 && e !== 'longjmp') throw e;
-    _setThrew(1, 0);
-  }
-}
-
 function invoke_vffff(index,a1,a2,a3,a4) {
   var sp = stackSave();
   try {
@@ -8096,10 +8114,10 @@ function invoke_iii(index,a1,a2) {
   }
 }
 
-function invoke_viiiiii(index,a1,a2,a3,a4,a5,a6) {
+function invoke_viiii(index,a1,a2,a3,a4) {
   var sp = stackSave();
   try {
-    wasmTable.get(index)(a1,a2,a3,a4,a5,a6);
+    wasmTable.get(index)(a1,a2,a3,a4);
   } catch(e) {
     stackRestore(sp);
     if (e !== e+0 && e !== 'longjmp') throw e;

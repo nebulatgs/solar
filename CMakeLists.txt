@@ -8,7 +8,9 @@ add_executable(solar
 			   src/solar.cpp
 			   src/game.cpp
 			   src/partsys.cpp
-			   src/shader.cpp)
+			   src/shader.cpp
+			   src/bcontroller.cpp
+			   )
 
 # set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 # set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
@@ -34,13 +36,18 @@ set_target_properties(solar PROPERTIES LINK_FLAGS "
 add_subdirectory("${PROJECT_SOURCE_DIR}/lib/glm" "${PROJECT_SOURCE_DIR}/lib/glm/build")
 
 # include_directories("${PROJECT_SOURCE_DIR}/../glfw/include")
-include_directories("${PROJECT_SOURCE_DIR}/lib/include")
+# include_directories("${PROJECT_SOURCE_DIR}/lib/include")
 include_directories("${PROJECT_SOURCE_DIR}/lib/glm")
 
 # target_link_libraries(solar glfw ${GLFW_LIBRARIES})
 # target_link_libraries(solar glfw)
 # target_link_libraries(solar glad)
 target_link_libraries(solar glm)
+
+add_custom_command(TARGET solar
+  POST_BUILD
+  COMMAND /usr/bin/cp solar.data ..
+  )
 
 # find_package(GLUT REQUIRED)
 # include_directories(${GLUT_INCLUDE_DIR})

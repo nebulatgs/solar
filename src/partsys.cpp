@@ -7,10 +7,12 @@ PartSys::PartSys(int maxCount, Game *game) : maxCount(maxCount), SceneObj(game)
 {
     
     shader.Compile("shaders/circle.vert","shaders/circle.frag");
-    GLfloat vertices[] = {
-        -0.5f, -0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
-        0.0f, 0.5f, 0.0f};
+    static const GLfloat vertices[] = {
+        -1.0f, -1.0f, 0.0f,
+         1.0f, -1.0f, 0.0f,
+        -1.0f,  1.0f, 0.0f,
+         1.0f,  1.0f, 0.0f,
+    };
     GLuint VBO;
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -66,6 +68,7 @@ void PartSys::update()
 
 void PartSys::draw()
 {
+    shader.SetMatrix4("transform", game->transform);
     shader.Use();
     // 1st attribute buffer : vertices
     glEnableVertexAttribArray(0);

@@ -1,25 +1,31 @@
 [
 {
   "directory": "/workspaces/solar/build",
-  "command": "/workspaces/emsdk/upstream/emscripten/em++   -I../lib/include -I../lib/glm  -g   -std=c++17 -O3 -fexceptions -std=gnu++17 -o CMakeFiles/solar.dir/src/solar.cpp.o -c /workspaces/solar/src/solar.cpp",
+  "command": "/workspaces/emsdk/upstream/emscripten/em++   -I../lib/glm  -g   -std=c++17 -O3 -fexceptions -std=gnu++17 -o CMakeFiles/solar.dir/src/solar.cpp.o -c /workspaces/solar/src/solar.cpp",
   "file": "/workspaces/solar/src/solar.cpp"
 },
 
 {
   "directory": "/workspaces/solar/build",
-  "command": "/workspaces/emsdk/upstream/emscripten/em++   -I../lib/include -I../lib/glm  -g   -std=c++17 -O3 -fexceptions -std=gnu++17 -o CMakeFiles/solar.dir/src/game.cpp.o -c /workspaces/solar/src/game.cpp",
+  "command": "/workspaces/emsdk/upstream/emscripten/em++   -I../lib/glm  -g   -std=c++17 -O3 -fexceptions -std=gnu++17 -o CMakeFiles/solar.dir/src/game.cpp.o -c /workspaces/solar/src/game.cpp",
   "file": "/workspaces/solar/src/game.cpp"
 },
 
 {
   "directory": "/workspaces/solar/build",
-  "command": "/workspaces/emsdk/upstream/emscripten/em++   -I../lib/include -I../lib/glm  -g   -std=c++17 -O3 -fexceptions -std=gnu++17 -o CMakeFiles/solar.dir/src/partsys.cpp.o -c /workspaces/solar/src/partsys.cpp",
+  "command": "/workspaces/emsdk/upstream/emscripten/em++   -I../lib/glm  -g   -std=c++17 -O3 -fexceptions -std=gnu++17 -o CMakeFiles/solar.dir/src/partsys.cpp.o -c /workspaces/solar/src/partsys.cpp",
   "file": "/workspaces/solar/src/partsys.cpp"
 },
 
 {
   "directory": "/workspaces/solar/build",
-  "command": "/workspaces/emsdk/upstream/emscripten/em++   -I../lib/include -I../lib/glm  -g   -std=c++17 -O3 -fexceptions -std=gnu++17 -o CMakeFiles/solar.dir/src/shader.cpp.o -c /workspaces/solar/src/shader.cpp",
+  "command": "/workspaces/emsdk/upstream/emscripten/em++   -I../lib/glm  -g   -std=c++17 -O3 -fexceptions -std=gnu++17 -o CMakeFiles/solar.dir/src/shader.cpp.o -c /workspaces/solar/src/shader.cpp",
   "file": "/workspaces/solar/src/shader.cpp"
+},
+
+{
+  "directory": "/workspaces/solar/build",
+  "command": "/workspaces/emsdk/upstream/emscripten/em++   -I../lib/glm  -g   -std=c++17 -O3 -fexceptions -std=gnu++17 -o CMakeFiles/solar.dir/src/bcontroller.cpp.o -c /workspaces/solar/src/bcontroller.cpp",
+  "file": "/workspaces/solar/src/bcontroller.cpp"
 }
 ]

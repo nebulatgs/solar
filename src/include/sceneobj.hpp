@@ -1,9 +1,9 @@
 #pragma once
 
 #include <memory>
+#pragma once
 
 #include "shader.hpp"
-
 class Game;
 
 class SceneObj
@@ -14,6 +14,6 @@ public:
     virtual void update() {}
 
 protected:
-    std::shared_ptr<Game> game;
+    Game *game;
     Shader shader;
 };

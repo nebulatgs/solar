@@ -37,5 +37,5 @@ void main()
 		FragColor.a /= 2.0;
 	}
 	// FragColor = vec4(normalize(gl_FragCoord).rgb, 1.0);
-	FragColor = vec4(0.2);
+	FragColor = vec4(0.992, 0.475, 0.659, 1.0);
 }

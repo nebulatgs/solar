@@ -1,5 +1,6 @@
 #include "include/game.hpp"
 #include "include/partsys.hpp"
+#include "include/bcontroller.hpp"
 
 Game::Game(int width, int height, std::string title) : width(width), height(height)
 {
@@ -22,15 +23,13 @@ Game::Game(int width, int height, std::string title) : width(width), height(heig
 
     // Set viewport
     glfwGetFramebufferSize(window, &(this->width), &(this->height));
-    glViewport(0, 0, this->width, this->height);
-    // glMatrixMode(GL_PROJECTION);
-    // glLoadIdentity();
-    // glOrtho(0, this->width, this->height, 0, 1, -1);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
-    // glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+    
     glClearColor(0.176, 0.204, 0.212, 1.0);
     glfwSwapInterval(1);
+    transform = glm::mat4(1.0f);
+    transform = glm::scale(transform, {0.5, 0.5, 1.0});
     initGL();
 }
 void Game::initGL()
