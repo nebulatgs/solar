@@ -1,0 +1,19 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/workspaces/emsdk/upstream/emscripten/system/include",
+                "${workspaceFolder}/lib"
+            ],
+            "defines": [],
+            "compilerPath": "/workspaces/emsdk/upstream/emscripten/emcc",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "linux-clang-x64",
+            "configurationProvider": "ms-vscode.cmake-tools"
+        }
+    ],
+    "version": 4
+}
