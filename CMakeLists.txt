@@ -46,7 +46,7 @@ target_link_libraries(solar glm)
 
 add_custom_command(TARGET solar
   POST_BUILD
-  COMMAND /usr/bin/cp solar.data ..
+  COMMAND /usr/bin/cp solar.* ..
   )
 
 # find_package(GLUT REQUIRED)
