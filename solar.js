@@ -187,7 +187,7 @@ var Module = typeof Module !== 'undefined' ? Module : {};
     }
   
    }
-   loadPackage({"files": [{"filename": "/shaders/circle.frag", "start": 0, "end": 1051, "audio": 0}, {"filename": "/shaders/circle.vert", "start": 1051, "end": 1402, "audio": 0}], "remote_package_size": 1402, "package_uuid": "8bf96a1e-8f6c-4d5a-93ea-df1633c78297"});
+   loadPackage({"files": [{"filename": "/shaders/circle.frag", "start": 0, "end": 522, "audio": 0}, {"filename": "/shaders/circle.vert", "start": 522, "end": 930, "audio": 0}], "remote_package_size": 930, "package_uuid": "35feb5b3-cb54-4125-a3c4-3af64123d411"});
   
   })();
   
@@ -1758,7 +1758,8 @@ var tempI64;
 // === Body ===
 
 var ASM_CONSTS = {
-  
+  18336: function() {var width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth; return width;},  
+ 18454: function() {var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight; return height;}
 };
 
 
@@ -5171,8 +5172,18 @@ var ASM_CONSTS = {
       abort();
     }
 
+  function _emscripten_asm_const_int(code, sigPtr, argbuf) {
+      var args = readAsmConstArgs(sigPtr, argbuf);
+      if (!ASM_CONSTS.hasOwnProperty(code)) abort('No EM_ASM constant found at address ' + code);
+      return ASM_CONSTS[code].apply(null, args);
+    }
+
   function _emscripten_memcpy_big(dest, src, num) {
       HEAPU8.copyWithin(dest, src, src + num);
+    }
+
+  function _emscripten_random() {
+      return Math.random();
     }
 
   function abortOnCannotGrowMemory(requestedSize) {
@@ -6534,6 +6545,8 @@ var ASM_CONSTS = {
       GLctx.vertexAttribPointer(index, size, type, !!normalized, stride, ptr);
     }
 
+  function _glViewport(x0, x1, x2, x3) { GLctx['viewport'](x0, x1, x2, x3) }
+
   /** @constructor */
   function GLFW_Window(id, width, height, title, monitor, share) {
         this.id = id;
@@ -7353,6 +7366,14 @@ var ASM_CONSTS = {
       return prevcbfun;
     }
 
+  function _glfwSetWindowSize(winid, width, height) {
+      GLFW.setWindowSize(winid, width, height);
+    }
+
+  function _glfwSetWindowSizeCallback(winid, cbfun) {
+      return GLFW.setWindowSizeCallback(winid, cbfun);
+    }
+
   function _glfwSwapBuffers(winid) {
       GLFW.swapBuffers(winid);
     }
@@ -7759,6 +7780,29 @@ var ASM_CONSTS = {
       return _strftime(s, maxsize, format, tm); // no locale support yet
     }
 
+  var readAsmConstArgsArray=[];
+  function readAsmConstArgs(sigPtr, buf) {
+      // Nobody should have mutated _readAsmConstArgsArray underneath us to be something else than an array.
+      assert(Array.isArray(readAsmConstArgsArray));
+      // The input buffer is allocated on the stack, so it must be stack-aligned.
+      assert(buf % 16 == 0);
+      readAsmConstArgsArray.length = 0;
+      var ch;
+      // Most arguments are i32s, so shift the buffer pointer so it is a plain
+      // index into HEAP32.
+      buf >>= 2;
+      while (ch = HEAPU8[sigPtr++]) {
+        assert(ch === 100/*'d'*/ || ch === 102/*'f'*/ || ch === 105 /*'i'*/);
+        // A double takes two 32-bit slots, and must also be aligned - the backend
+        // will emit padding to avoid that.
+        var double = ch < 105;
+        if (double && (buf & 1)) buf++;
+        readAsmConstArgsArray.push(double ? HEAPF64[buf++ >> 1] : HEAP32[buf]);
+        ++buf;
+      }
+      return readAsmConstArgsArray;
+    }
+
 var FSNode = /** @constructor */ function(parent, name, mode, rdev) {
     if (!parent) {
       parent = this;  // root node sets parent to itself
@@ -7869,7 +7913,9 @@ var asmLibraryArg = {
   "_embind_register_std_wstring": __embind_register_std_wstring,
   "_embind_register_void": __embind_register_void,
   "abort": _abort,
+  "emscripten_asm_const_int": _emscripten_asm_const_int,
   "emscripten_memcpy_big": _emscripten_memcpy_big,
+  "emscripten_random": _emscripten_random,
   "emscripten_resize_heap": _emscripten_resize_heap,
   "emscripten_set_main_loop": _emscripten_set_main_loop,
   "environ_get": _environ_get,
@@ -7909,11 +7955,14 @@ var asmLibraryArg = {
   "glUseProgram": _glUseProgram,
   "glVertexAttribDivisor": _glVertexAttribDivisor,
   "glVertexAttribPointer": _glVertexAttribPointer,
+  "glViewport": _glViewport,
   "glfwCreateWindow": _glfwCreateWindow,
   "glfwGetFramebufferSize": _glfwGetFramebufferSize,
   "glfwInit": _glfwInit,
   "glfwMakeContextCurrent": _glfwMakeContextCurrent,
   "glfwSetErrorCallback": _glfwSetErrorCallback,
+  "glfwSetWindowSize": _glfwSetWindowSize,
+  "glfwSetWindowSizeCallback": _glfwSetWindowSizeCallback,
   "glfwSwapBuffers": _glfwSwapBuffers,
   "glfwSwapInterval": _glfwSwapInterval,
   "glfwTerminate": _glfwTerminate,
@@ -8070,6 +8119,17 @@ function invoke_iiiiii(index,a1,a2,a3,a4,a5) {
   }
 }
 
+function invoke_iii(index,a1,a2) {
+  var sp = stackSave();
+  try {
+    return wasmTable.get(index)(a1,a2);
+  } catch(e) {
+    stackRestore(sp);
+    if (e !== e+0 && e !== 'longjmp') throw e;
+    _setThrew(1, 0);
+  }
+}
+
 function invoke_viii(index,a1,a2,a3) {
   var sp = stackSave();
   try {
@@ -8096,17 +8156,6 @@ function invoke_iiii(index,a1,a2,a3) {
   var sp = stackSave();
   try {
     return wasmTable.get(index)(a1,a2,a3);
-  } catch(e) {
-    stackRestore(sp);
-    if (e !== e+0 && e !== 'longjmp') throw e;
-    _setThrew(1, 0);
-  }
-}
-
-function invoke_iii(index,a1,a2) {
-  var sp = stackSave();
-  try {
-    return wasmTable.get(index)(a1,a2);
   } catch(e) {
     stackRestore(sp);
     if (e !== e+0 && e !== 'longjmp') throw e;

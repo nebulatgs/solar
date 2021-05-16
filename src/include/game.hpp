@@ -26,6 +26,7 @@ private:
     GLFWwindow *window;
     int width;
     int height;
+	float aspect;
 
 private:
     GLuint particles_position_buffer;

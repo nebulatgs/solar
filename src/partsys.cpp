@@ -5,7 +5,8 @@
 
 PartSys::PartSys(int maxCount, Game *game) : maxCount(maxCount), SceneObj(game)
 {
-    
+    g_particule_position_size_data = new GLfloat[maxCount * 4];
+    g_particule_color_data = new GLfloat[maxCount * 4];
     shader.Compile("shaders/circle.vert","shaders/circle.frag");
     static const GLfloat vertices[] = {
         -1.0f, -1.0f, 0.0f,
@@ -51,8 +52,24 @@ PartSys::PartSys(int maxCount, Game *game) : maxCount(maxCount), SceneObj(game)
     // Initialize with empty (NULL) buffer : it will be updated later, each frame.
     glBufferData(GL_ARRAY_BUFFER, maxCount * 4 * sizeof(GLubyte), NULL, GL_STREAM_DRAW);
 
-    glBindBuffer(GL_ARRAY_BUFFER, billboard_vertex_buffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    // glBindBuffer(GL_ARRAY_BUFFER, billboard_vertex_buffer);
+    // glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	for (int i = 0; i < maxCount * 4; i+=4)
+	{
+		g_particule_position_size_data[i] = emscripten_random() * 2.0 - 1.0;
+		g_particule_position_size_data[i+1] = emscripten_random() * 2.0 - 1.0;
+		g_particule_position_size_data[i+2] = emscripten_random() * 2.0 - 1.0;
+		g_particule_position_size_data[i+3] = 0.2;
+	}
+
+	for (int i = 0; i < maxCount * 4; i+=4)
+	{
+		g_particule_color_data[i] = 0.424;
+		g_particule_color_data[i+1] = 0.361;
+		g_particule_color_data[i+2] = 0.906;
+		g_particule_color_data[i+3] = 0.5;
+	}
+	
 }
 
 void PartSys::update()
