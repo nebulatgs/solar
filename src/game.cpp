@@ -86,8 +86,8 @@ void Game::tick()
     // if (deltaTime >= 1.0 / 60.0)
     // {
         // lastTime = time;
-        draw();
         update();
+        draw();
         input();
     // }
 }

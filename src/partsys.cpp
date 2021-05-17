@@ -85,8 +85,7 @@ void PartSys::update()
 
 void PartSys::draw()
 {
-    shader.SetMatrix4("transform", game->transform);
-    shader.Use();
+    shader.SetMatrix4("transform", game->transform, true);
     // 1st attribute buffer : vertices
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, billboard_vertex_buffer);

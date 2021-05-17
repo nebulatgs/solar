@@ -29,6 +29,7 @@ set_target_properties(solar PROPERTIES LINK_FLAGS "
 						-s TOTAL_MEMORY=256MB 
 						
 						-s ENVIRONMENT=web,worker
+						-s DISABLE_EXCEPTION_CATCHING=0
 						--bind
 						--preload-file ../shaders")
 # add_subdirectory("${PROJECT_SOURCE_DIR}/../glfw" "${PROJECT_SOURCE_DIR}/../glfw/build")
