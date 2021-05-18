@@ -48,7 +48,8 @@ Game::Game(int width, int height, std::string title) : width(width), height(heig
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
     
-    glClearColor(0.176, 0.204, 0.212, 1.0);
+    // glClearColor(0.176, 0.204, 0.212, 1.0);
+    glClearColor(0.082, 0.098, 0.102, 1.0);
     glfwSwapInterval(1);
     camTransform = glm::mat4(1.0);
     transform = glm::scale(camTransform, {aspect, 1.0, 1.0});

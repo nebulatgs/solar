@@ -2,18 +2,18 @@
 
 Particle::Particle() : disabled(false)
 {
-    pos.x = ((emscripten_random() * 2.0) - 1.0) * 30.0;
-    pos.y = ((emscripten_random() * 2.0) - 1.0) * 30.0;
+    pos.x = ((emscripten_random() * 2.0) - 1.0) * 3.0;
+    pos.y = ((emscripten_random() * 2.0) - 1.0) * 3.0;
 
-    vel.x = ((emscripten_random() * 2.0) - 1.0) / 10.0;
-    vel.y = ((emscripten_random() * 2.0) - 1.0) / 10.0;
+    vel.x = ((emscripten_random() * 2.0) - 1.0) / 1000.0;
+    vel.y = ((emscripten_random() * 2.0) - 1.0) / 1000.0;
 
     mass = (emscripten_random() * SizeRatio);
 }
 Particle::Particle(double mass) : mass(mass), disabled(false)
 {
     pos = {0, 0};
-    vel = {2.0, 0};
+    vel = {0, 0};
     // pos.x = ((emscripten_random() * 2.0) - 1.0) * 100.0;
     // pos.y = ((emscripten_random() * 2.0) - 1.0) * 100.0;
 
