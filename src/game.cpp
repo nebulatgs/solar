@@ -3,10 +3,23 @@
 #include "include/partsys.hpp"
 #include "include/bcontroller.hpp"
 
+void mouseCallback(GLFWwindow *, int button, int action, int)
+{
+    game->input(button, action);
+}
 
 void resizeCallback(GLFWwindow* window, int width, int height)
 {
 	game->draw();
+}
+
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+    if(yoffset > 0)
+        game->zoomCamera(0.75);
+    else
+        game->zoomCamera(1.333); 
+    // emscripten_log(0, "%f", yoffset101.0);
 }
 
 Game::Game(int width, int height, std::string title) : width(width), height(height)
@@ -37,15 +50,21 @@ Game::Game(int width, int height, std::string title) : width(width), height(heig
     
     glClearColor(0.176, 0.204, 0.212, 1.0);
     glfwSwapInterval(1);
-    transform = glm::mat4(1.0);
-    transform = glm::scale(transform, {aspect, 1.0, 1.0});
+    camTransform = glm::mat4(1.0);
+    transform = glm::scale(camTransform, {aspect, 1.0, 1.0});
     // transform = glm::scale(transform, {0.5, 0.5, 1.0});
+    glfwSetMouseButtonCallback(window, mouseCallback);
+    glfwSetScrollCallback(window, scroll_callback);
     initGL();
+	// glClear(GL_COLOR_BUFFER_BIT);
+    // glfwSwapBuffers(window);
+	// glClear(GL_COLOR_BUFFER_BIT);
 }
 
 void Game::initGL()
 {
-    game_objects.push_back(std::make_shared<PartSys>(10, this));  
+    game_objects.push_back(std::make_shared<PartSys>(1000, glm::vec4(0.424, 0.361, 0.906, 0.75), this));  
+    // game_objects.push_back(std::make_shared<PartSys>(1000, glm::vec4(0.298, 0.82, 0.216, 0.75), this));
 }
 
 void Game::update()
@@ -56,9 +75,16 @@ void Game::update()
 	glViewport(0, 0, screen_width, screen_height);
     glfwGetFramebufferSize(window, &(this->width), &(this->height));
 	aspect = static_cast<float>(height) / static_cast<float>(width);
-	transform = glm::mat4(1.0);
+    transform = camTransform;
+    // if(mouseDown)
+    // {
+    //     double x, y;
+    //     glfwGetCursorPos(window, &x, &y);
+    //     emscripten_log(0, "%f, %f", x, y);
+    //     transform = glm::translate(transform, {0.0f,0.0f,1.0f});
+    // }
     transform = glm::scale(transform, {aspect, 1.0, 1.0});
-    // transform = glm::scale(transform, {0.5, 0.5, 1.0});
+    transform = glm::scale(transform, {0.01, 0.01, 1.0});
     for (auto &&object : game_objects)
     {
         object->update();
@@ -72,11 +98,30 @@ void Game::draw()
     {
         object->draw();
     }
+    // glAccum(GL_ACCUM, 1.0f);
+    // glAccum(GL_RETURN, 1.0f);
     glfwSwapBuffers(window);
+}
+
+void Game::input(int button, int action)
+{
+    this->button = button;
+    this->mouseDown = action;
+    if(mouseDown)
+    {
+        double x, y;
+        glfwGetCursorPos(window, &x, &y);
+        startMousePos = {x, y};
+    }
 }
 
 void Game::input()
 {
+}
+
+void Game::zoomCamera(float zoom)
+{
+    camTransform = glm::scale(camTransform, {zoom, zoom, 0});
 }
 
 void Game::tick()

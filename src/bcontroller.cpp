@@ -17,7 +17,7 @@ BController::BController(int count, Game *game) : count(count), SceneObj(game)
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
     glBindVertexArray(VAO);
-    emscripten_log(0, "hi");
+    // emscripten_log(0, "hi");
 }
 
 void BController::draw()

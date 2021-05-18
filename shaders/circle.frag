@@ -1,5 +1,5 @@
 #version 300 es
-precision lowp float;
+precision highp float;
 out vec4 FragColor;
 in vec4 coord;
 in vec4 col;
@@ -16,6 +16,7 @@ void main()
 		discard;
 	}
 	FragColor.rgb = col.rgb;
+	// FragColor.rgb = vec3(0.424, 0.361, 0.906);
 	
 	FragColor.a = aastep(-1.0, -1.0 * length(coord.xyz));
 	FragColor.a *= col.a;
@@ -25,8 +26,8 @@ void main()
 	{
 		discard;
 	}
-	else
-	{
-		FragColor.a /= 2.0;
-	}
+	// else
+	// {
+	// 	// FragColor.a /= 1.25;
+	// }
 }

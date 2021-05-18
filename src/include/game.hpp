@@ -15,7 +15,8 @@ public:
     void update();
     void draw();
     void input();
-
+    void input(int button, int action);
+    void zoomCamera(float zoom);
 public:
     glm::mat4 transform;
 
@@ -27,8 +28,12 @@ private:
     int width;
     int height;
 	float aspect;
+    int button;
+    bool mouseDown;
+    glm::dvec2 startMousePos;
 
 private:
+    glm::mat4 camTransform;
     GLuint particles_position_buffer;
     GLuint particles_color_buffer;
     GLuint billboard_vertex_buffer;

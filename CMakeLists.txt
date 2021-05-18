@@ -10,17 +10,19 @@ add_executable(solar
 			   src/partsys.cpp
 			   src/shader.cpp
 			   src/bcontroller.cpp
+			   src/particle.cpp
 			   )
 
 # set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 # set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 # set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-set_target_properties(solar PROPERTIES COMPILE_FLAGS "-std=c++17 -O3 -fexceptions")
+set_target_properties(solar PROPERTIES COMPILE_FLAGS "-std=c++17 -O3 -fexceptions -msimd128")
 set_target_properties(solar PROPERTIES LINK_FLAGS "
 						-std=c++17 
 						-O3
 						-flto 
 						-s ASSERTIONS=1
+						-msimd128
 						
 						-s USE_GLFW=3 
 						-s MAX_WEBGL_VERSION=2 
