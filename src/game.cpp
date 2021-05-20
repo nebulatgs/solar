@@ -64,7 +64,7 @@ Game::Game(int width, int height, std::string title) : width(width), height(heig
 
 void Game::initGL()
 {
-    game_objects.push_back(std::make_shared<PartSys>(1000, glm::vec4(0.424, 0.361, 0.906, 0.75), this));  
+    game_objects.push_back(std::make_shared<PartSys>(1000, this));  
     // game_objects.push_back(std::make_shared<PartSys>(1000, glm::vec4(0.298, 0.82, 0.216, 0.75), this));
 }
 
@@ -86,6 +86,7 @@ void Game::update()
     // }
     transform = glm::scale(transform, {aspect, 1.0, 1.0});
     transform = glm::scale(transform, {0.01, 0.01, 1.0});
+    transform = glm::translate(transform, {10.0,10.0,10.0});
     for (auto &&object : game_objects)
     {
         object->update();
@@ -122,7 +123,11 @@ void Game::input()
 
 void Game::zoomCamera(float zoom)
 {
-    camTransform = glm::scale(camTransform, {zoom, zoom, 0});
+    camTransform = glm::scale(camTransform, {zoom, zoom, 1.0f});
+    // camTransform *= glm::translate(glm::mat4(1.0), {100.0, 100.0, 100.0});
+    // camTransform = glm::translate(camTransform, {100.0f,100.0f,100.0f});
+    // emscripten_log(0, "%f", camTransform.length());
+    // glm::tr
 }
 
 void Game::tick()
@@ -131,8 +136,10 @@ void Game::tick()
     // double deltaTime = time - lastTime;
     // if (deltaTime >= 1.0 / 60.0)
     // {
+
         // lastTime = time;
-        update();
+        for(int i = 0; i < 4; i++)
+            update();
         draw();
         input();
     // }

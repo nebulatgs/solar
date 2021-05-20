@@ -1,9 +1,11 @@
 #include "include/partsys.hpp"
 #include "include/game.hpp"
 #include "include/shader.hpp"
+#include "include/swarm.hpp"
 
-PartSys::PartSys(int maxCount, glm::vec4 color, Game *game) : maxCount(maxCount), color(color), SceneObj(game)
+PartSys::PartSys(int maxCount, Game *game) : maxCount(maxCount), SceneObj(game)
 {
+    swarm = new swrm::Swarm(8);
     g_particule_position_size_data.reserve(maxCount * 4);
     g_particule_color_data.reserve(maxCount * 4);
     particles.reserve(maxCount);
@@ -53,19 +55,27 @@ PartSys::PartSys(int maxCount, glm::vec4 color, Game *game) : maxCount(maxCount)
     // Initialize with empty (NULL) buffer : it will be updated later, each frame.
     glBufferData(GL_ARRAY_BUFFER, maxCount * 4 * sizeof(GLubyte), NULL, GL_STREAM_DRAW);
 
-    // particles.emplace_back(1000000);
+    particles.emplace_back(5000000, glm::vec4(0.0, 0.722, 0.58, 1.0));
+    g_particule_color_data.push_back(particles.back().color.r);
+    g_particule_color_data.push_back(particles.back().color.g);
+    g_particule_color_data.push_back(particles.back().color.b);
+    g_particule_color_data.push_back(particles.back().color.a);
     for (int i = 0; i < maxCount - 1; i++)
     {
-        particles.emplace_back();
+        particles.emplace_back((i % 3 > 1 ? glm::vec4(0.424, 0.361, 0.906, 0.75) : glm::vec4(0.035, 0.518, 0.89, 0.75)));
+        g_particule_color_data.push_back(particles.back().color.r);
+        g_particule_color_data.push_back(particles.back().color.g);
+        g_particule_color_data.push_back(particles.back().color.b);
+        g_particule_color_data.push_back(particles.back().color.a);
     }
 
-    for (int i = 0; i < maxCount; i++)
-    {
-        g_particule_color_data.push_back(color.r);
-        g_particule_color_data.push_back(color.g);
-        g_particule_color_data.push_back(color.b);
-        g_particule_color_data.push_back(color.a);
-    }
+    // for (int i = 0; i < maxCount; i++)
+    // {
+    //     g_particule_color_data.push_back(color.r);
+    //     g_particule_color_data.push_back(color.g);
+    //     g_particule_color_data.push_back(color.b);
+    //     g_particule_color_data.push_back(color.a);
+    // }
 }
 
 void PartSys::updateBuffers()
@@ -79,6 +89,22 @@ void PartSys::updateBuffers()
     glBufferSubData(GL_ARRAY_BUFFER, 0, maxCount * sizeof(GLfloat) * 4, g_particule_color_data.data());
 }
 
+void PartSys::threadedSearch(uint32_t worker_id, uint32_t worker_count)
+{
+    // Number of values for which the thread is responsible
+    const uint32_t step = particles.size() / worker_count;
+    // First value for the thread
+    const uint32_t start_index = worker_id * step;
+    // Last value
+    const uint32_t end_index = (worker_id < worker_count - 1) ? start_index + step : particles.size() - 1;
+
+    // The actual loop
+    for (uint32_t i(start_index); i < end_index; ++i)
+    {
+        particles[i].search(particles);
+    }
+}
+
 void PartSys::update()
 {
     int i = 0;
@@ -88,13 +114,16 @@ void PartSys::update()
         g_particule_position_size_data[i] = particle.pos.x;
         g_particule_position_size_data[i + 1] = particle.pos.y;
         g_particule_position_size_data[i + 2] = 0;
-        g_particule_position_size_data[i + 3] = particle.mass / Particle::SizeRatio;
+        g_particule_position_size_data[i + 3] = particle.size; // / Particle::SizeRatio;
         i += 4;
     }
-    for (auto &&particle : particles)
-    {
-        particle.search(particles);
-    }
+    swrm::WorkGroup work_group = swarm->execute([&](uint32_t worker_id, uint32_t worker_count)
+                                                { this->threadedSearch(worker_id, worker_count); });
+    work_group.waitExecutionDone();
+    // for (auto &&particle : particles)
+    // {
+    //     particle.search(particles);
+    // }
     game->transform = glm::translate(game->transform, {particles.front().pos, 0.0});
     updateBuffers();
 }
@@ -130,12 +159,12 @@ void PartSys::draw()
     glEnableVertexAttribArray(2);
     glBindBuffer(GL_ARRAY_BUFFER, particles_color_buffer);
     glVertexAttribPointer(
-        2,                // attribute. No particular reason for 2, but must match the layout in the shader.
-        4,                // size : r + g + b + a => 4
+        2,        // attribute. No particular reason for 2, but must match the layout in the shader.
+        4,        // size : r + g + b + a => 4
         GL_FLOAT, // type
-        GL_TRUE,          // normalized? *** YES, this means that the unsigned char[4] will be accessible with a vec4 (floats) in the shader ***
-        0,                // stride
-        (void *)0         // array buffer offset
+        GL_TRUE,  // normalized? *** YES, this means that the unsigned char[4] will be accessible with a vec4 (floats) in the shader ***
+        0,        // stride
+        (void *)0 // array buffer offset
     );
 
     glVertexAttribDivisor(0, 0); // particles vertices : always reuse the same 4 vertices -> 0

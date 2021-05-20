@@ -40,11 +40,12 @@ out vec4 coord;
 out vec4 col;
 void main()
 {
-	vec4 tCoords = vec4(aPos, 1.0) * transform;
-	tCoords *= pPos.w;
-	vec4 pPost = pPos * transform;
+	//vec4 tCoords = vec4(aPos, 1.0) * transform;
+	//tCoords *= pPos.w;
+	vec4 pPost = (pPos + (vec4(aPos, 1.0) * pPos.w)) * transform;
+	// pPost += 2.0;
 	// pPos *= transform;
-    gl_Position = vec4(tCoords.x + pPost.x, tCoords.y + pPost.y, 1.0, 1.0);
+    gl_Position = vec4(pPost.x, pPost.y, 1.0, 1.0);
 	coord = vec4(aPos, 1.0);
 	col = pCol;
 }
