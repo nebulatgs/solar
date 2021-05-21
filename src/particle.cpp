@@ -5,7 +5,7 @@ Particle::Particle(glm::vec4 color) : disabled(false), color(color)
     // pos.x = ((emscripten_random() * 2.0) - 1.0) * 30.0;
     // pos.y = ((emscripten_random() * 2.0) - 1.0) * 30.0;
     pos = glm::diskRand(80.0);
-    double dist = 100.0 / glm::distance(pos, {0,0}) + 100.0;
+    double dist = 100.0 / glm::distance(pos, {0,0}) + 125.0;
     vel = glm::normalize(glm::dvec2(pos.y, -pos.x)) * dist;
     // vel = {(glm::vec4(vel, 1.0, 1.0) * matRot).x, (glm::vec4(vel, 1.0, 1.0) * matRot).y};
     // vel.x = ((emscripten_random() * 2.0) - 1.0) / 1000.0;

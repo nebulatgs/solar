@@ -138,7 +138,7 @@ void Game::tick()
     // {
 
         // lastTime = time;
-        for(int i = 0; i < 4; i++)
+        for(int i = 0; i < 6; i++)
             update();
         draw();
         input();
